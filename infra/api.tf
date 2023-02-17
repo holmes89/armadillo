@@ -23,7 +23,7 @@ resource "aws_iam_role" "lambda" {
   tags               = module.api_label.tags
 }
 
-data "aws_iam_policy_document" "lambda" { #Should I break it up?Z
+data "aws_iam_policy_document" "lambda" { #Should I break it up?
   # Dynamo Connection
   statement {
     actions = [
@@ -54,7 +54,7 @@ data "aws_iam_policy_document" "lambda" { #Should I break it up?Z
     actions=[
       "cognito-idp:AdminInitiateAuth"
     ]
-    resources = [var.cognitoZ_arn]
+    resources = [var.cognito_arn]
   }
 
 }
