@@ -1,0 +1,57 @@
+openapi: 3.0.1
+info:
+  contact:
+    email: holmes89@gmail.com
+  description: This is a api spec for Armadillo
+  title: Armadillo API
+  version: 0.0.1
+servers:
+- url: https://api.joelholmes.dev/v1/armadillo
+paths:
+  /login:
+    post:
+      description: Authenticate
+      operationId: authenticate
+      requestBody:
+        $ref: '#/components/requestBodies/LoginCreateRequest'
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication'
+          description: successful submission of user request
+        "500":
+          content: {}
+          description: System error
+      tags:
+      - login
+components:
+  requestBodies:
+    LoginCreateRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Login'
+  schemas:
+    Login:
+      example:
+        password: password
+        id: id
+        username: username
+      properties:
+        refresh_token:
+          type: string
+        username:
+          type: string
+        password:
+          type: string
+    Authentication:
+      example:
+        refresh_token: refresh_token
+        token: token
+      properties:
+        refresh_token:
+          type: string
+        token:
+          type: string

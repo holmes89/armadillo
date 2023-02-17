@@ -1,0 +1,9 @@
+go.mod
+main.go
+Dockerfile
+README.md
+internal/**/*_service.go
+api
+lib/client/**
+lib/client/*
+!lib/client/*.go

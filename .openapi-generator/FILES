@@ -1,0 +1,10 @@
+api/openapi.yaml
+internal/handlers/rest/v1/api.go
+internal/handlers/rest/v1/api_login.go
+internal/handlers/rest/v1/error.go
+internal/handlers/rest/v1/helpers.go
+internal/handlers/rest/v1/impl.go
+internal/handlers/rest/v1/logger.go
+internal/handlers/rest/v1/model_authentication.go
+internal/handlers/rest/v1/model_login.go
+internal/handlers/rest/v1/routers.go

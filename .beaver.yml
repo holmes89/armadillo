@@ -1,0 +1,6 @@
+version: v1
+name: armadillo
+description: auth
+language: go
+storage: dynamo
+server: lambda

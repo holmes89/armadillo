@@ -1,0 +1,9 @@
+version: v1
+name: armadillo
+properities:
+    - name: Login
+      properities:
+        - field: Username
+          type: string
+        - field: Password
+          type: string
