@@ -54,7 +54,7 @@ data "aws_iam_policy_document" "lambda" { #Should I break it up?
     actions=[
       "cognito-idp:AdminInitiateAuth"
     ]
-    resources = [var.authorizer_arn]
+    resources = [var.cognito_arn]
   }
 
 }

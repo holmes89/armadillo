@@ -22,6 +22,10 @@ variable "cognito_client_id" {
   type = string
 }
 
+variable "cognito_arn" {
+  type = string
+}
+
 variable "cognito_pool_id" {
   type = string
 }
