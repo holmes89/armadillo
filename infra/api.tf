@@ -23,7 +23,7 @@ resource "aws_iam_role" "lambda" {
   tags               = module.api_label.tags
 }
 
-data "aws_iam_policy_document" "lambda" { #Should I break it up?
+data "aws_iam_policy_document" "lambda" { #Should I break it up?Z
   # Dynamo Connection
   statement {
     actions = [
@@ -54,7 +54,7 @@ data "aws_iam_policy_document" "lambda" { #Should I break it up?
     actions=[
       "cognito-idp:AdminInitiateAuth"
     ]
-    resources = [var.cognito_arn]
+    resources = [var.cognitoZ_arn]
   }
 
 }
@@ -189,6 +189,7 @@ resource "aws_api_gateway_method" "api_proxy_post" {
   rest_api_id   = var.api_gateway_id
   resource_id   = aws_api_gateway_resource.api_proxy.id
   http_method   = "POST"
+  authorization = "NONE"
 }
 
 resource "aws_api_gateway_method" "api_proxy_get" {
