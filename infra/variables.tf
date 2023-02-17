@@ -17,3 +17,11 @@ variable "api_gateway_root_resource_id" {
 variable "api_gateway_execute_arn" {
   type = string
 }
+
+variable "cognito_client_id" {
+  type = string
+}
+
+variable "cognito_pool_id" {
+  type = string
+}
