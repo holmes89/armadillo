@@ -50,6 +50,12 @@ data "aws_iam_policy_document" "lambda" { #Should I break it up?
     ]
     resources = ["arn:aws:dynamodb:${data.aws_region.current.name}:*:table/${aws_dynamodb_table.armadillo_table.name}"]
   }
+  statement {
+    actions=[
+      "cognito-idp:AdminInitiateAuth"
+    ]
+    resources = [var.authorizer_arn]
+  }
 
 }
 
@@ -80,6 +86,8 @@ resource "aws_lambda_function" "api_lambda" {
   environment {
     variables = {
       DYNAMODB_TABLE = aws_dynamodb_table.armadillo_table.name
+      COGNITO_CLIENT_ID = var.cognito_client_id
+      COGNITO_POOL_ID = var.cognito_pool_id
     }
   }
   depends_on = [aws_cloudwatch_log_group.api_lambda]
