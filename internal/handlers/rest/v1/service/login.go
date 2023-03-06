@@ -20,7 +20,7 @@ type LoginServicer struct {
 }
 
 // NewLoginServicer instanciates a new servicer
-func NewLoginServicer(svc internal.LoginService) *LoginServicer {
+func NewLoginServicer(svc internal.LoginService) v1.LoginApiServicer {
 	return &LoginServicer{
 		svc: svc,
 	}
@@ -39,8 +39,9 @@ func (s *LoginServicer) Authenticate(ctx context.Context, entity v1.Login) (resp
 
 	res, err := s.svc.Authenticate(ctx, r)
 	if err != nil {
-		log.Error().Err(err).Msg("unable to insert Login")
-		return resp, errors.New("unable to create Login")
+		log.Error().Err(err).Msg("unable to Login")
+		resp.Code = http.StatusForbidden
+		return resp, errors.New("unable to Login")
 	}
 
 	resp.Code = http.StatusOK

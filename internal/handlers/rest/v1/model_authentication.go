@@ -11,9 +11,12 @@
 package v1
 
 type Authentication struct {
+
 	RefreshToken string `json:"refresh_token,omitempty"`
 
 	Token string `json:"token,omitempty"`
+
+	Session string `json:"session,omitempty"`
 }
 
 // AssertAuthenticationRequired checks if the required fields are not zero-ed

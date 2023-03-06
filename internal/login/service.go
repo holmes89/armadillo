@@ -33,12 +33,12 @@ func NewService() internal.LoginService {
 		clientID: &clientID,
 		poolID:   &poolID,
 	}
+	// return &service{}
 }
 
 func (s *service) Authenticate(ctx context.Context, si internal.Login) (internal.Authentication, error) {
-	authInput := &cognito.AdminInitiateAuthInput{
-		ClientId:   s.clientID,
-		UserPoolId: s.poolID,
+	authInput := &cognito.InitiateAuthInput{
+		ClientId: s.clientID,
 	}
 	auth := internal.Authentication{}
 	if si.RefreshToken != nil {
@@ -47,6 +47,29 @@ func (s *service) Authenticate(ctx context.Context, si internal.Login) (internal
 		authInput.AuthParameters = map[string]*string{
 			"REFRESH_TOKEN": si.RefreshToken,
 		}
+	} else if si.Session != nil {
+		resp, err := s.svc.RespondToAuthChallenge(&cognito.RespondToAuthChallengeInput{
+
+			ChallengeName: aws.String(cognito.ChallengeNameTypeNewPasswordRequired),
+			ChallengeResponses: map[string]*string{
+				"USERNAME":     &si.Username,
+				"NEW_PASSWORD": &si.Password,
+			},
+			ClientId: s.clientID,
+			Session:  si.Session,
+		})
+		if err != nil {
+			log.Error().Err(err).Msg("unable to update user's password")
+			return auth, errors.New("unable to authenticate user")
+		}
+		if resp.AuthenticationResult.AccessToken != nil {
+			auth.Token = *resp.AuthenticationResult.AccessToken
+		}
+		if resp.AuthenticationResult.RefreshToken != nil {
+			auth.RefreshToken = *resp.AuthenticationResult.RefreshToken
+		}
+		return auth, nil
+
 	} else {
 		log.Info().Msg("authentication using username and password...")
 		authInput.AuthFlow = aws.String(cognito.AuthFlowTypeUserPasswordAuth)
@@ -55,16 +78,25 @@ func (s *service) Authenticate(ctx context.Context, si internal.Login) (internal
 			"PASSWORD": &si.Password,
 		}
 	}
-	resp, err := s.svc.AdminInitiateAuth(authInput)
+
+	resp, err := s.svc.InitiateAuth(authInput)
 	if err != nil {
 		log.Error().Err(err).Msg("unable to authenticate user")
 		return auth, errors.New("unable to authenticate user")
 	}
+	if resp == nil {
+		log.Error().Err(err).Interface("msg", resp).Msg("no results")
+		return auth, errors.New("unable to authenticate user")
+	}
+
 	if resp.AuthenticationResult.AccessToken != nil {
 		auth.Token = *resp.AuthenticationResult.AccessToken
 	}
 	if resp.AuthenticationResult.RefreshToken != nil {
 		auth.RefreshToken = *resp.AuthenticationResult.RefreshToken
+	}
+	if resp.Session != nil {
+		auth.Session = resp.Session
 	}
 	return auth, nil
 }

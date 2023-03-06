@@ -46,12 +46,17 @@ components:
           type: string
         password:
           type: string
+        session:
+          type: string
     Authentication:
       example:
         refresh_token: refresh_token
+        session: session
         token: token
       properties:
         refresh_token:
           type: string
         token:
+          type: string
+        session:
           type: string

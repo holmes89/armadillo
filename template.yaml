@@ -1,0 +1,35 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Transform: AWS::Serverless-2016-10-31
+
+Resources:
+  ArmadilloApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Dev
+      Name: ArmadilloApi
+      Cors:
+        AllowMethods: "'OPTIONS,GET,POST,PUT,DELETE'"
+        AllowHeaders: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'"
+        AllowOrigin: "'*'"
+
+  ArmadilloFunction:
+    Type: AWS::Serverless::Function 
+    Properties:
+      Timeout: 30
+      Handler: api
+      Runtime: go1.x
+      Architectures:
+        - x86_64
+      Tracing: Active
+      Policies: AmazonDynamoDBFullAccess
+      Environment:
+        Variables:
+          DYNAMODB_ENDPOINT: "http://dynamo:8000"
+      Events:
+        CatchAll:
+          Type: Api 
+          Properties:
+            Path: /{proxy+}
+            RestApiId: !Ref ArmadilloApi
+            Method: ANY

@@ -7,3 +7,5 @@ api
 lib/client/**
 lib/client/*
 !lib/client/*.go
+
+**/src/client/index.ts

@@ -11,11 +11,14 @@
 package v1
 
 type Login struct {
+
 	RefreshToken string `json:"refresh_token,omitempty"`
 
 	Username string `json:"username,omitempty"`
 
 	Password string `json:"password,omitempty"`
+
+	Session string `json:"session,omitempty"`
 }
 
 // AssertLoginRequired checks if the required fields are not zero-ed
