@@ -37,6 +37,10 @@ func (s *LoginServicer) Authenticate(ctx context.Context, entity v1.Login) (resp
 		r.RefreshToken = &entity.RefreshToken
 	}
 
+	if entity.Session != "" {
+		r.Session = &entity.Session
+	}
+
 	res, err := s.svc.Authenticate(ctx, r)
 	if err != nil {
 		log.Error().Err(err).Msg("unable to Login")

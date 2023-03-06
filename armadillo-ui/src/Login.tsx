@@ -16,7 +16,7 @@ const Login: React.FC = () => {
       .then(({data})=> {
         if(data.session) {
           setSession(data.session)
-          login()
+          setPassword("")
         } else {
           console.log(data.token)
         }
@@ -26,7 +26,22 @@ const Login: React.FC = () => {
   return (
     <div className="Login">
       <div className="box">
-            <div className="field">
+        {session ? <div className="field">
+              <label className="label">New Password</label>
+              <div className="control has-icons-left">
+                <input type="password"  value = {undefined} className="input" onChange={(event) => {
+                  if (event) {
+                    const { value } = event.target;
+                    setPassword(value)
+                  }
+                }}/>
+                <span className="icon is-small is-left">
+                  <i className="fa fa-lock"></i>
+                </span>
+              </div>
+            </div> :
+        <>
+        <div className="field">
               <label className="label">Email</label>
               <div className="control has-icons-left">
                 <input type="email" className="input" onChange={(event) => {
@@ -54,6 +69,9 @@ const Login: React.FC = () => {
                 </span>
               </div>
             </div>
+            </>
+        }
+            
             <div className="field">
               <button className="button is-success" onClick={login}>
                 Login

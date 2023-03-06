@@ -48,6 +48,7 @@ func (s *service) Authenticate(ctx context.Context, si internal.Login) (internal
 			"REFRESH_TOKEN": si.RefreshToken,
 		}
 	} else if si.Session != nil {
+		log.Info().Msg("authentication using session token...")
 		resp, err := s.svc.RespondToAuthChallenge(&cognito.RespondToAuthChallengeInput{
 
 			ChallengeName: aws.String(cognito.ChallengeNameTypeNewPasswordRequired),
@@ -84,7 +85,11 @@ func (s *service) Authenticate(ctx context.Context, si internal.Login) (internal
 		log.Error().Err(err).Msg("unable to authenticate user")
 		return auth, errors.New("unable to authenticate user")
 	}
-	if resp == nil {
+	if resp.Session != nil {
+		auth.Session = resp.Session
+		return auth, nil
+	}
+	if resp == nil || resp.AuthenticationResult == nil {
 		log.Error().Err(err).Interface("msg", resp).Msg("no results")
 		return auth, errors.New("unable to authenticate user")
 	}
@@ -95,8 +100,6 @@ func (s *service) Authenticate(ctx context.Context, si internal.Login) (internal
 	if resp.AuthenticationResult.RefreshToken != nil {
 		auth.RefreshToken = *resp.AuthenticationResult.RefreshToken
 	}
-	if resp.Session != nil {
-		auth.Session = resp.Session
-	}
+
 	return auth, nil
 }
